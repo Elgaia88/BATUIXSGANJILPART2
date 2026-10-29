@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kuis Sejarah Indonesia - Pasca Kemerdekaan & Pergolakan Daerah</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #1e293b, #0f172a);
+      min-height: 100vh;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #1e293b;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #475569;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #64748b;
+    }
+  </style>
+</head>
+<body class="text-slate-100 flex flex-col justify-between p-3 sm:p-6 antialiased min-h-screen">
+
+  <!-- Header Ringkas -->
+  <header class="max-w-3xl w-full mx-auto text-center py-4">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs sm:text-sm font-semibold mb-2">
+      <span>🇮🇩</span> Sejarah Perjuangan Bangsa
+    </div>
+    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow-sm">
+      Kuis Sejarah Indonesia
+    </h1>
+    <p class="text-xs sm:text-sm text-slate-400 mt-1">RIS, Pemberontakan PKI Madiun & Gerakan DI/TII</p>
+  </header>
+
+  <!-- Kontainer Utama -->
+  <main class="max-w-3xl w-full mx-auto my-auto flex-grow flex items-center justify-center">
+
+    <!-- 1. LAYAR REGISTRASI / MULAI -->
+    <section id="start-screen" class="w-full bg-slate-800/90 backdrop-blur-md border border-slate-700/80 rounded-2xl p-6 sm:p-8 shadow-2xl transition-all">
+      <div class="text-center mb-6">
+        <h2 class="text-xl sm:text-2xl font-bold text-white mb-2">Persiapan Kuis</h2>
+        <p class="text-slate-300 text-sm">Uji pemahamanmu tentang sejarah pergolakan mempertahankan NKRI. Total 25 soal lengkap.</p>
+      </div>
+
+      <form id="quiz-form" onsubmit="handleStartQuiz(event)" class="space-y-5">
+        <!-- Input Nama -->
+        <div>
+          <label for="player-name" class="block text-sm font-medium text-slate-200 mb-1.5">
+            Nama Peserta <span class="text-rose-400">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="player-name" 
+            required
+            placeholder="Masukkan nama lengkap Anda..." 
+            class="w-full px-4 py-3 bg-slate-900/80 border border-slate-600 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+            autocomplete="off"
+          />
+          <p id="name-error" class="text-xs text-rose-400 mt-1.5 hidden">Harap masukkan nama terlebih dahulu.</p>
+        </div>
+
+        <!-- Pilihan Durasi -->
+        <div>
+          <label class="block text-sm font-medium text-slate-200 mb-2">
+            Pilihan Durasi per Soal:
+          </label>
+          <div class="grid grid-cols-2 gap-4">
+            <label class="duration-card relative flex items-center justify-center p-3.5 border-2 border-slate-600 rounded-xl cursor-pointer bg-slate-900/60 hover:bg-slate-700/50 transition">
+              <input type="radio" name="time-limit" value="15" class="sr-only peer">
+              <div class="text-center peer-checked:text-indigo-400">
+                <span class="block text-lg font-bold">15 Detik</span>
+                <span class="text-xs text-slate-400 peer-checked:text-indigo-300">Tantangan Cepat</span>
+              </div>
+              <div class="absolute inset-0 rounded-xl border-2 border-indigo-500 hidden peer-checked:block pointer-events-none"></div>
+            </label>
+
+            <label class="duration-card relative flex items-center justify-center p-3.5 border-2 border-slate-600 rounded-xl cursor-pointer bg-slate-900/60 hover:bg-slate-700/50 transition">
+              <input type="radio" name="time-limit" value="30" checked class="sr-only peer">
+              <div class="text-center peer-checked:text-indigo-400">
+                <span class="block text-lg font-bold">30 Detik</span>
+                <span class="text-xs text-slate-400 peer-checked:text-indigo-300">Standar Santai</span>
+              </div>
+              <div class="absolute inset-0 rounded-xl border-2 border-indigo-500 hidden peer-checked:block pointer-events-none"></div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Info Fitur Kuis -->
+        <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700 text-xs text-slate-300 space-y-1.5">
+          <div class="flex items-center gap-2">
+            <span class="text-indigo-400">✔</span> Urutan soal & opsi jawaban diacak otomatis.
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-indigo-400">✔</span> Feedback langsung jawaban benar (hijau) & salah (merah).
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-indigo-400">✔</span> Review komprehensif jawaban di akhir kuis.
+          </div>
+        </div>
+
+        <button 
+          type="submit" 
+          class="w-full py-3.5 px-6 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 active:scale-[0.99] transition duration-150"
+        >
+          Mulai Kuis Sekarang
+        </button>
+      </form>
+    </section>
+
+    <!-- 2. LAYAR PERMAINAN KUIS -->
+    <section id="quiz-screen" class="w-full bg-slate-800/95 backdrop-blur-md border border-slate-700 rounded-2xl p-4 sm:p-7 shadow-2xl hidden">
+      <!-- Bar Info Atas: Nama, Nomor Soal, & Indikator Waktu -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pb-4 border-b border-slate-700/80">
+        <div>
+          <span class="text-xs uppercase tracking-wider font-semibold text-slate-400">Peserta:</span>
+          <span id="display-player-name" class="text-sm font-bold text-white ml-1"></span>
+        </div>
+        <div class="flex items-center gap-4">
+          <span class="text-xs font-semibold px-2.5 py-1 rounded bg-slate-700 text-indigo-300 border border-slate-600">
+            Soal <span id="current-question-idx">1</span> / <span id="total-questions-num">25</span>
+          </span>
+          <!-- Timer Countdown Badge -->
+          <div class="flex items-center gap-1.5 bg-slate-900 px-3 py-1 rounded-full border border-slate-700">
+            <svg class="w-4 h-4 text-amber-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span id="timer-text" class="text-sm font-extrabold text-amber-300 tracking-wider font-mono">00s</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Linear Timer Progress Bar -->
+      <div class="w-full bg-slate-900 h-2.5 rounded-full overflow-hidden mt-4">
+        <div id="timer-progress" class="bg-indigo-500 h-full w-full transition-all duration-1000 linear"></div>
+      </div>
+
+      <!-- Teks Pertanyaan -->
+      <div class="my-6">
+        <h3 id="question-text" class="text-base sm:text-lg md:text-xl font-bold text-slate-100 leading-snug min-h-[56px] flex items-center">
+          Pertanyaan sedang dimuat...
+        </h3>
+      </div>
+
+      <!-- Pilihan Jawaban -->
+      <div id="options-container" class="grid grid-cols-1 gap-3">
+        <!-- Opsi jawaban di-generate dinamis via JS -->
+      </div>
+
+      <!-- Pesan Status Waktu / Jawaban -->
+      <div id="feedback-message" class="mt-4 text-center text-sm font-semibold h-6 transition"></div>
+    </section>
+
+    <!-- 3. LAYAR HASIL & REVIEW -->
+    <section id="result-screen" class="w-full bg-slate-800/95 backdrop-blur-md border border-slate-700 rounded-2xl p-5 sm:p-8 shadow-2xl hidden">
+      <!-- Header Hasil -->
+      <div class="text-center pb-6 border-b border-slate-700">
+        <span class="text-xs uppercase tracking-widest font-bold text-indigo-400">Hasil Evaluasi Pembelajaran</span>
+        <h2 class="text-xl sm:text-2xl font-black text-white mt-1">
+          Kuis Sejarah Indonesia - Pasca Kemerdekaan & Pergolakan Daerah
+        </h2>
+        <p class="text-slate-300 text-sm mt-1">
+          Pemain: <span id="final-player-name" class="font-bold text-white"></span>
+        </p>
+
+        <!-- Kartu Skor -->
+        <div class="mt-5 inline-flex flex-col items-center justify-center p-5 bg-slate-900/90 border border-slate-700 rounded-2xl shadow-inner min-w-[200px]">
+          <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Nilai Akhir</span>
+          <div class="text-4xl sm:text-5xl font-black text-indigo-400 mt-1" id="final-score-val">0</div>
+          <span class="text-xs text-slate-400 mt-1" id="final-score-detail">0 dari 25 Benar</span>
+        </div>
+
+        <!-- Ringkasan Statistik -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-5 max-w-md mx-auto text-center">
+          <div class="p-3 bg-slate-900/50 rounded-xl border border-emerald-500/30">
+            <span class="block text-xs text-slate-400">Jawaban Benar</span>
+            <span id="stat-correct" class="text-lg font-bold text-emerald-400">0</span>
+          </div>
+          <div class="p-3 bg-slate-900/50 rounded-xl border border-rose-500/30">
+            <span class="block text-xs text-slate-400">Jawaban Salah</span>
+            <span id="stat-incorrect" class="text-lg font-bold text-rose-400">0</span>
+          </div>
+          <div class="p-3 bg-slate-900/50 rounded-xl border border-amber-500/30 col-span-2 sm:col-span-1">
+            <span class="block text-xs text-slate-400">Akurasi</span>
+            <span id="stat-accuracy" class="text-lg font-bold text-amber-400">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tombol Aksi Ulangi -->
+      <div class="py-5 flex justify-center">
+        <button 
+          onclick="restartQuiz()" 
+          class="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl shadow-lg shadow-indigo-600/30 transition flex items-center gap-2"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          Mulai Kuis Baru (Acak Ulang)
+        </button>
+      </div>
+
+      <!-- Daftar Review Soal -->
+      <div class="mt-4">
+        <h3 class="text-lg font-bold text-white mb-3 flex items-center gap-2">
+          <span>📋</span> Review Pembahasan Soal
+        </h3>
+        <div id="review-list" class="space-y-4 max-h-[380px] overflow-y-auto pr-2 custom-scrollbar">
+          <!-- Item review diisi secara dinamis -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="max-w-3xl w-full mx-auto text-center py-4 text-xs text-slate-500">
+    Kuis Edukasi Sejarah Indonesia &bull; Evaluasi Kurikulum Pembelajaran Mandiri
+  </footer>
+
+  <!-- LOGIKA JAVASCRIPT LENGKAP -->
+  <script>
+    // 1. Bank Data 25 Soal Lengkap dari Dokumen
+    const RAW_QUESTIONS = [
+      {
+        question: "Berdasarkan Keputusan konferensi meja bundar bentuk negara Indonesia adalah negara...",
+        options: ["Kesatuan", "Persemakmuran", "Kerajaan", "Serikat"],
+        answer: "Serikat"
+      },
+      {
+        question: "Masyarakat negara negara bagian menuntut untuk Kembali ke negara kesatuan karena RIS tidak sesuai dengan...",
+        options: ["Cita Cita proklamasi 17 Agustus 1945", "Demokrasi liberal", "Cita cita Luhur", "Demokrasi liberalis"],
+        answer: "Cita Cita proklamasi 17 Agustus 1945"
+      },
+      {
+        question: "Sejak tanggal 22 April 1950 negara Republik Indonesia Serikat (RIS) hanya tinggal 3 negara bagian yaitu...",
+        options: [
+          "Republik Indonesia - Negara Sumatra Timur – Negara Indonesia Timur",
+          "Republik Indonesia - Negara Sumatra Timur – Republik Maluku Selatan",
+          "Republik Indonesia - Negara Indonesia Timur – Republik Maluku Selatan",
+          "Republik Indonesia - Negara Indonesia Timur – Republik Pasundan"
+        ],
+        answer: "Republik Indonesia - Negara Sumatra Timur – Negara Indonesia Timur"
+      },
+      {
+        question: "Ibu kota negara Sumatra Timur adalah...",
+        options: ["Jogjakarta", "Jakarta", "Medan", "Bukit tinggi"],
+        answer: "Medan"
+      },
+      {
+        question: "17 Agustus 1950 Republik Indonesia Serikat kembali ke negara....",
+        options: ["Negara Kesatuan Republik Indonesia", "Indonesia Serikat", "Negara Syariat Islam", "Negara Federal"],
+        answer: "Negara Kesatuan Republik Indonesia"
+      },
+      {
+        question: "Tujuan Pemberontakan PKI Madiun 1948 adalah mengganti Dasar Negara Pancasila menjadi....",
+        options: ["Syariat Islam", "Komunis", "Monarki", "Autarki"],
+        answer: "Komunis"
+      },
+      {
+        question: "Salah satu sebab pemberontakan PKI Madiun adalah jatuhnya Kabinet...",
+        options: ["Amir Syarifuddin", "Burhanuddin Harahap", "Juanda", "Wilopo"],
+        answer: "Amir Syarifuddin"
+      },
+      {
+        question: "Sebab jatuhnya Kabinet Amir Syarifuddin adalah penandatanganan perjanjian....",
+        options: ["Linggarjati", "Roem-Roijen", "Renville", "Hoge Veluwe"],
+        answer: "Renville"
+      },
+      {
+        question: "Tgl 18 September 1948 Muso memproklamasikan berdirinya negara....",
+        options: ["Republik Soviet Indonesia", "Republik Maluku Selatan", "Indonesia Timur", "Sumatra Timur"],
+        answer: "Republik Soviet Indonesia"
+      },
+      {
+        question: "Partai yang dibentuk Amir Syarifuddin setelah kabinet Amir Syarifuddin jatuh / bubar adalah....",
+        options: ["Front Demokrasi Rakyat (FDR)", "Marhaenisme", "Masyumi", "Murba"],
+        answer: "Front Demokrasi Rakyat (FDR)"
+      },
+      {
+        question: "Nama gerakan pemberontakan DI/TII di Jawa Barat adalah....",
+        options: ["TII", "Darul Islam (DI)", "NII", "Siliwangi"],
+        answer: "Darul Islam (DI)"
+      },
+      {
+        question: "Tujuan pemberontakan DI/TII adalah mendirikan...",
+        options: ["Negara Serikat", "Negara Komunis", "Negara Islam Indonesia", "Negara Federal"],
+        answer: "Negara Islam Indonesia"
+      },
+      {
+        question: "Pemberontakan DI/TII di Jawa Barat dipimpin oleh...",
+        options: ["S.M. Kartosuwiryo", "Amir Fatah", "Daud Beureuh", "Andi Azis"],
+        answer: "S.M. Kartosuwiryo"
+      },
+      {
+        question: "Pasukan TNI yang diserang DI/TII di Jawa Barat adalah pasukan...",
+        options: ["Siliwangi", "Raiders", "Bukit Barisan", "KOSTRAD"],
+        answer: "Siliwangi"
+      },
+      {
+        question: "Pemimpin dan pasukan DI/TII akhirnya berhasil ditangkap di Gunung...",
+        options: ["Geber", "Jati", "Kidul", "Merapi"],
+        answer: "Geber"
+      },
+      {
+        question: "Pemimpin pemberontakan DI/TII di Tegal Jawa Tengah adalah...",
+        options: ["Amir Fatah", "Daud Beureuh", "Mahmud Abdul Rahman", "Kyai Soemolango"],
+        answer: "Amir Fatah"
+      },
+      {
+        question: "Pemberontakan DI/TII di Brebes Jawa Tengah dipimpin oleh...",
+        options: [
+          "Amir Fatah",
+          "S.M. Kartosuwiryo",
+          "Daud Beureuh",
+          "Mahmud Abdul Rahman (Kyai Soemolango)"
+        ],
+        answer: "Mahmud Abdul Rahman (Kyai Soemolango)"
+      },
+      {
+        question: "Nama gerakan pemberontakan DI/TII di Tegal Jawa Tengah adalah...",
+        options: ["Angkatan Umat Islam", "Majelis Islam", "Darul Islam", "Hizbullah"],
+        answer: "Majelis Islam"
+      },
+      {
+        question: "Nama gerakan pemberontakan DI/TII di Brebes Jawa Tengah adalah...",
+        options: ["Majelis Islam", "Darul Islam", "Angkatan Umat Islam", "Hizbullah"],
+        answer: "Angkatan Umat Islam"
+      },
+      {
+        question: "Pemberontakan DI/TII Jawa Tengah ditumpas melalui operasi militer yaitu operasi....",
+        options: ["Pagar Betis", "Sapta Marga", "Garuda I", "Gerakan Banteng Negara"],
+        answer: "Gerakan Banteng Negara"
+      },
+      {
+        question: "Pemberontakan DI/TII di Kalimantan Selatan dipimpin oleh....",
+        options: ["Ibnu Hajar", "Daud Beureuh", "Kahar Muzakar", "S.M. Kartosoewirjo"],
+        answer: "Ibnu Hajar"
+      },
+      {
+        question: "Berikut adalah tindakan pemberontakan DI/TII di Kalimantan Selatan, KECUALI...",
+        options: [
+          "Menyatakan bergabung dengan Negara Islam Indonesia pimpinan Kartosoewirjo",
+          "Melakukan perampokan",
+          "Melakukan pembunuhan",
+          "Menyatakan keluar dari Republik Indonesia Serikat"
+        ],
+        answer: "Menyatakan keluar dari Republik Indonesia Serikat"
+      },
+      {
+        question: "Kahar Muzakar memimpin pemberontakan DI/TII di daerah....",
+        options: ["Aceh", "Jawa Tengah", "Sulawesi Selatan", "Kalimantan Selatan"],
+        answer: "Sulawesi Selatan"
+      },
+      {
+        question: "Nama gerakan pemberontakan DI/TII di Sulawesi Selatan adalah Gerakan...",
+        options: ["Kesatuan Gerilya Sulawesi Selatan", "Darul Islam", "Majelis Islam", "Angkatan Umat Islam"],
+        answer: "Kesatuan Gerilya Sulawesi Selatan"
+      },
+      {
+        question: "Pemberontakan DI/TII di Aceh dipimpin oleh....",
+        options: ["Amir Fatah", "Tengku Daud Beureuh", "Mahmud Abdul Rahman", "Kahar Muzakar"],
+        answer: "Tengku Daud Beureuh"
+      }
+    ];
+
+    // State Aplikasi
+    let playerName = "";
+    let timePerQuestion = 30;
+    let questionsList = [];
+    let currentQuestionIndex = 0;
+    let userAnswers = []; // Menyimpan: { question, chosenOption, correctOption, isCorrect }
+    let timerInterval = null;
+    let remainingTime = 0;
+    let isAnswerSubmitted = false;
+
+    // Algoritma Pengacakan Fisher-Yates
+    function shuffleArray(array) {
+      const cloned = [...array];
+      for (let i = cloned.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cloned[i], cloned[j]] = [cloned[j], cloned[i]];
+      }
+      return cloned;
+    }
+
+    // Mempersiapkan daftar soal teracak dan opsi jawaban teracak
+    function prepareRandomizedQuiz() {
+      // 1. Acak urutan soal
+      const shuffledQuestions = shuffleArray(RAW_QUESTIONS);
+      
+      // 2. Acak opsi untuk tiap soal
+      return shuffledQuestions.map(q => {
+        return {
+          question: q.question,
+          options: shuffleArray(q.options),
+          answer: q.answer
+        };
+      });
+    }
+
+    // Handler Form Mulai
+    function handleStartQuiz(e) {
+      e.preventDefault();
+      const nameInput = document.getElementById('player-name');
+      const nameError = document.getElementById('name-error');
+      
+      if (!nameInput.value.trim()) {
+        nameError.classList.remove('hidden');
+        nameInput.focus();
+        return;
+      }
+      nameError.classList.add('hidden');
+      playerName = nameInput.value.trim();
+
+      // Ambil waktu per soal
+      const timeLimitRadios = document.getElementsByName('time-limit');
+      for (const radio of timeLimitRadios) {
+        if (radio.checked) {
+          timePerQuestion = parseInt(radio.value, 10);
+          break;
+        }
+      }
+
+      // Inisialisasi Kuis
+      questionsList = prepareRandomizedQuiz();
+      currentQuestionIndex = 0;
+      userAnswers = [];
+
+      // Update Tampilan Layar
+      document.getElementById('start-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('quiz-screen').classList.remove('hidden');
+
+      document.getElementById('display-player-name').textContent = playerName;
+      document.getElementById('total-questions-num').textContent = questionsList.length;
+
+      loadQuestion(currentQuestionIndex);
+    }
+
+    // Memuat Soal Tertentu
+    function loadQuestion(index) {
+      if (index >= questionsList.length) {
+        showResults();
+        return;
+      }
+
+      isAnswerSubmitted = false;
+      const currentQ = questionsList[index];
+      
+      // Update nomor soal
+      document.getElementById('current-question-idx').textContent = index + 1;
+      document.getElementById('question-text').textContent = `${index + 1}. ${currentQ.question}`;
+      
+      const feedbackMsg = document.getElementById('feedback-message');
+      feedbackMsg.textContent = "";
+      feedbackMsg.className = "mt-4 text-center text-sm font-semibold h-6 transition";
+
+      // Render Opsi Jawaban
+      const container = document.getElementById('options-container');
+      container.innerHTML = "";
+
+      const optionLabels = ['A', 'B', 'C', 'D'];
+
+      currentQ.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.type = "button";
+        btn.className = `option-btn w-full text-left p-3.5 sm:p-4 rounded-xl border border-slate-600 bg-slate-700/60 hover:bg-slate-700 text-slate-100 font-medium transition duration-150 flex items-center justify-between group focus:outline-none focus:ring-2 focus:ring-indigo-400`;
+        btn.onclick = () => handleSelectAnswer(opt, btn);
+        
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-8 h-8 rounded-lg bg-slate-800 text-indigo-300 font-bold flex items-center justify-center border border-slate-600 text-xs sm:text-sm flex-shrink-0 group-hover:border-indigo-400">
+              ${optionLabels[idx] || (idx + 1)}
+            </span>
+            <span class="text-sm sm:text-base leading-relaxed text-slate-100 font-medium">${opt}</span>
+          </div>
+          <span class="icon-indicator ml-2 hidden font-bold text-lg"></span>
+        `;
+        btn.dataset.optionText = opt;
+        container.appendChild(btn);
+      });
+
+      // Mulai Timer
+      startQuestionTimer();
+    }
+
+    // Mengelola Timer Per Soal
+    function startQuestionTimer() {
+      clearInterval(timerInterval);
+      remainingTime = timePerQuestion;
+      updateTimerDisplay();
+
+      timerInterval = setInterval(() => {
+        remainingTime--;
+        updateTimerDisplay();
+
+        if (remainingTime <= 0) {
+          clearInterval(timerInterval);
+          handleTimeOut();
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const timerText = document.getElementById('timer-text');
+      const progressBar = document.getElementById('timer-progress');
+      
+      timerText.textContent = `${remainingTime < 10 ? '0' : ''}${remainingTime}s`;
+
+      const percentage = (remainingTime / timePerQuestion) * 100;
+      progressBar.style.width = `${Math.max(percentage, 0)}%`;
+
+      // Perubahan warna bar sesuai sisa waktu
+      if (percentage <= 25) {
+        progressBar.className = "bg-rose-500 h-full transition-all duration-1000 linear";
+        timerText.className = "text-sm font-extrabold text-rose-400 tracking-wider font-mono animate-pulse";
+      } else if (percentage <= 50) {
+        progressBar.className = "bg-amber-400 h-full transition-all duration-1000 linear";
+        timerText.className = "text-sm font-extrabold text-amber-300 tracking-wider font-mono";
+      } else {
+        progressBar.className = "bg-indigo-500 h-full transition-all duration-1000 linear";
+        timerText.className = "text-sm font-extrabold text-indigo-300 tracking-wider font-mono";
+      }
+    }
+
+    // Handler Saat Pengguna Memilih Jawaban
+    function handleSelectAnswer(selectedOption, selectedButton) {
+      if (isAnswerSubmitted) return;
+      isAnswerSubmitted = true;
+      clearInterval(timerInterval);
+
+      const currentQ = questionsList[currentQuestionIndex];
+      const isCorrect = (selectedOption.trim().toLowerCase() === currentQ.answer.trim().toLowerCase());
+
+      userAnswers.push({
+        question: currentQ.question,
+        chosenOption: selectedOption,
+        correctOption: currentQ.answer,
+        isCorrect: isCorrect,
+        status: isCorrect ? 'correct' : 'incorrect'
+      });
+
+      // Terapkan Styling Feedback Visual
+      highlightButtons(selectedOption, currentQ.answer);
+
+      const feedback = document.getElementById('feedback-message');
+      if (isCorrect) {
+        feedback.textContent = "Jawaban Tepat! (+1 Poin)";
+        feedback.className = "mt-4 text-center text-sm font-bold text-emerald-400 h-6";
+      } else {
+        feedback.textContent = `Salah! Jawaban yang benar adalah: ${currentQ.answer}`;
+        feedback.className = "mt-4 text-center text-sm font-bold text-rose-400 h-6";
+      }
+
+      // Jeda sebelum lanjut ke soal berikutnya
+      setTimeout(() => {
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+      }, 1600);
+    }
+
+    // Handler Jika Waktu Habis
+    function handleTimeOut() {
+      if (isAnswerSubmitted) return;
+      isAnswerSubmitted = true;
+
+      const currentQ = questionsList[currentQuestionIndex];
+      userAnswers.push({
+        question: currentQ.question,
+        chosenOption: "(Waktu Habis / Tidak Menjawab)",
+        correctOption: currentQ.answer,
+        isCorrect: false,
+        status: 'timeout'
+      });
+
+      // Tampilkan jawaban yang benar dengan warna hijau
+      highlightButtons(null, currentQ.answer);
+
+      const feedback = document.getElementById('feedback-message');
+      feedback.textContent = `Waktu Habis! Jawaban yang benar: ${currentQ.answer}`;
+      feedback.className = "mt-4 text-center text-sm font-bold text-amber-400 h-6";
+
+      setTimeout(() => {
+        currentQuestionIndex++;
+        loadQuestion(currentQuestionIndex);
+      }, 1800);
+    }
+
+    // Fungsi Mewarnai Tombol Jawaban (Hijau: Benar, Merah: Salah)
+    function highlightButtons(chosenText, correctText) {
+      const buttons = document.querySelectorAll('.option-btn');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.remove('hover:bg-slate-700', 'cursor-pointer');
+        btn.classList.add('cursor-default');
+
+        const optText = btn.dataset.optionText.trim().toLowerCase();
+        const correctNorm = correctText.trim().toLowerCase();
+        const indicator = btn.querySelector('.icon-indicator');
+
+        if (optText === correctNorm) {
+          // Tombol Benar -> Hijau (#22c55e) dengan teks putih kontras
+          btn.className = "option-btn w-full text-left p-3.5 sm:p-4 rounded-xl bg-emerald-600 text-white font-semibold border-2 border-emerald-400 shadow-md flex items-center justify-between";
+          if (indicator) {
+            indicator.textContent = "✓";
+            indicator.classList.remove('hidden');
+          }
+        } else if (chosenText && optText === chosenText.trim().toLowerCase()) {
+          // Tombol Pilihan Salah -> Merah (#ef4444) dengan teks putih kontras
+          btn.className = "option-btn w-full text-left p-3.5 sm:p-4 rounded-xl bg-rose-600 text-white font-semibold border-2 border-rose-400 shadow-md flex items-center justify-between";
+          if (indicator) {
+            indicator.textContent = "✗";
+            indicator.classList.remove('hidden');
+          }
+        } else {
+          // Opsi lainnya dinonaktifkan dengan opasitas berkurang
+          btn.classList.add('opacity-40');
+        }
+      });
+    }
+
+    // Layar Hasil & Review
+    function showResults() {
+      clearInterval(timerInterval);
+      document.getElementById('quiz-screen').classList.add('hidden');
+      document.getElementById('result-screen').classList.remove('hidden');
+
+      const total = questionsList.length;
+      const correctCount = userAnswers.filter(a => a.isCorrect).length;
+      const incorrectCount = total - correctCount;
+      const finalScore = Math.round((correctCount / total) * 100);
+
+      document.getElementById('final-player-name').textContent = playerName;
+      document.getElementById('final-score-val').textContent = finalScore;
+      document.getElementById('final-score-detail').textContent = `${correctCount} dari ${total} Soal Benar`;
+      
+      document.getElementById('stat-correct').textContent = correctCount;
+      document.getElementById('stat-incorrect').textContent = incorrectCount;
+      document.getElementById('stat-accuracy').textContent = `${finalScore}%`;
+
+      // Render Review Lengkap
+      const reviewList = document.getElementById('review-list');
+      reviewList.innerHTML = "";
+
+      userAnswers.forEach((ans, idx) => {
+        const item = document.createElement('div');
+        item.className = `p-4 rounded-xl border ${
+          ans.isCorrect 
+            ? 'bg-emerald-950/30 border-emerald-500/40' 
+            : 'bg-rose-950/30 border-rose-500/40'
+        } space-y-2 text-sm`;
+
+        item.innerHTML = `
+          <div class="flex items-start justify-between gap-2">
+            <span class="font-bold text-white text-sm sm:text-base">
+              ${idx + 1}. ${ans.question}
+            </span>
+            <span class="px-2 py-0.5 rounded text-xs font-bold whitespace-nowrap ${
+              ans.isCorrect 
+                ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' 
+                : 'bg-rose-500/20 text-rose-300 border border-rose-500/40'
+            }">
+              ${ans.isCorrect ? 'Benar (+1)' : 'Salah'}
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-700/60 text-xs sm:text-sm">
+            <div>
+              <span class="text-slate-400 block text-xs">Jawaban Anda:</span>
+              <span class="font-semibold ${ans.isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+                ${ans.chosenOption}
+              </span>
+            </div>
+            <div>
+              <span class="text-slate-400 block text-xs">Kunci Jawaban Benar:</span>
+              <span class="font-semibold text-emerald-400">
+                ${ans.correctOption}
+              </span>
+            </div>
+          </div>
+        `;
+        reviewList.appendChild(item);
+      });
+    }
+
+    // Reset Kuis & Mulai Ulang
+    function restartQuiz() {
+      document.getElementById('result-screen').classList.add('hidden');
+      document.getElementById('start-screen').classList.remove('hidden');
+      document.getElementById('player-name').value = playerName; // Mempertahankan nama yang sudah diinput sebelumnya
+    }
+  </script>
+</body>
+</html>
